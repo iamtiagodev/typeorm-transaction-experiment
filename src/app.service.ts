@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { Transactional } from 'typeorm-transactional';
+import { Propagation, Transactional } from 'typeorm-transactional';
 import { Pokemon } from './entities/Pokemon';
 import { dataSource } from './app.module';
 
@@ -94,6 +94,106 @@ export class AppService {
       ]);
       rejectOrResolve(promises);
     });
+  }
+
+  // ✅ Promise.allSettled + typeorm-transactional
+  // Propagation.REQUIRED
+  @Transactional({ propagation: Propagation.REQUIRED })
+  async createV41(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+  // ✅ Promise.allSettled + typeorm-transactional
+  // Propagation.MANDATORY
+  @Transactional({ propagation: Propagation.MANDATORY })
+  async createV42(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+
+  // ✅ Promise.allSettled + typeorm-transactional
+  // Propagation.NESTED
+  @Transactional({ propagation: Propagation.NESTED })
+  async createV43(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+
+  // ✅ Promise.allSettled + typeorm-transactional
+  // Propagation.REQUIRES_NEW
+  @Transactional({ propagation: Propagation.REQUIRES_NEW })
+  async createV44(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+  // ❌ Promise.allSettled + typeorm-transactional
+  // Propagation.SUPPORTS
+  @Transactional({ propagation: Propagation.SUPPORTS })
+  async createV45(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+  // ❌ Promise.allSettled + typeorm-transactional
+  // Propagation.NOT_SUPPORTED
+  @Transactional({ propagation: Propagation.NOT_SUPPORTED })
+  async createV46(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
+  }
+
+  // ❌ Promise.allSettled + typeorm-transactional
+  // Propagation.NEVER
+  @Transactional({ propagation: Propagation.NEVER })
+  async createV47(): Promise<void> {
+    const promises = await Promise.allSettled([
+      this.save({ id: 1, name: 'Bulbasaur' }),
+      this.save({ id: 2, name: 'Charmander' }),
+      this.save({ id: 3, name: 'Squirtle' }),
+      this.save({ id: 4, name: 'Pikachu' }, throwError),
+    ]);
+
+    rejectOrResolve(promises);
   }
 
 }
